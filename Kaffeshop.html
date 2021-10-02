@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+</head>
+
+<body>
+    <div>
+        <h1>Espresso House</h1>
+        
+        <label for="coffeeSorts">Välj KaffeSort</label>
+        <select id="coffeeSorts">
+            
+        </select>
+
+        <label for="numberOfCoffees">Antal</label>
+        <input id="numberOfCoffees" />
+
+        <button onClick="buyButton()">Köp</button>
+        <p id="totalSpent"></p>
+        <p id="membershipStatus"></p>
+    </div>
+    <hr>
+    <h1>Dina transaktioner</h1>
+    <div id="transactionHistory"></div>
+    <script>
+        // object with different coffees. 
+        const coffees = [
+            { name: 'Brygg Kaffe', price: 20, id: 1},
+            { name: 'Cappucino', price: 30, id: 2},
+            { name: 'Latte', price: 40, id: 3}
+        ]
+        
+        // prints out the object into select with option for the costumer to choice between. 
+        const options = document.getElementById("coffeeSorts")
+        coffees.forEach((option, index) =>{
+            const optionName = document.createElement("option")
+            optionName.innerHTML = `${option.name} ${option.price} Kr`
+            optionName.value = index
+            optionName.name = option.name
+            optionName.price = option.price
+            options.appendChild(optionName)
+        })
+        
+        
+        
+        // class to get a unique costumer so it can save its transaction and get a membership.
+        class Costumer {
+            constructor(){
+                this.transactions = []
+                this.numberOfCups = 0
+                this.sum = 0
+                this.newArray = []
+            }
+            // adds the transaction the costumer has into a array with a object. 
+            addTransaction(product, amount){
+                const transaction = {
+                    name: product.name,
+                    price: product.price,
+                    id: product.id,
+                    amount: amount,
+                    total: product.price * amount
+                }
+                this.transactions.push(transaction)
+                
+            }
+            // checks how many cups the costumer has bought and uses this.sum to check in getMemberShip
+            getTotalOfCups(){
+                this.sum = 0
+                this.transactions.forEach(transaction =>{
+                    this.sum += parseInt(transaction.amount)
+                })
+                return this.sum
+            }
+            // checks how much the costumer has spent so far. 
+            getTotalSpent(){
+                this.sum = 0
+                this.transactions.forEach(amount =>{
+                    this.sum += parseInt(amount.total)
+                })
+                return this.sum
+            }
+            // checks membership of how many cups the costumer has bought. 
+            getMemberShip(){
+                if(this.sum < 10){
+                    return `Brons`
+                }
+                if(this.sum >= 10 && this.sum < 20){
+                    return `Silver`
+                }
+                if(this.sum >= 20){
+                    return `Guld`
+                }
+                 
+            }
+            
+        }
+        const costumer = new Costumer()
+
+        const coffeeSorts = document.getElementById("coffeeSorts")
+        const numberOfCoffees = document.getElementById("numberOfCoffees")
+        
+        
+        function buyButton(){
+            // gets the value of object and the input value so we can count it. 
+            costumer.addTransaction(coffees[coffeeSorts.value], numberOfCoffees.value)
+            // counts as many cups costumer has bought
+            costumer.getTotalOfCups()
+            // prints out what membership costumer has
+            const membershipStatus = document.getElementById("membershipStatus").innerHTML = `Medlemskapsnivå ${costumer.getMemberShip()}`
+            // how much costumer has spent total so far. 
+            const totalSpent = document.getElementById("totalSpent").innerHTML = `Du har handlat för ${costumer.getTotalSpent()} kr`
+
+            // print out what costumer has order when the costumer clicks "Köp".
+            const transactionHistory = document.getElementById("transactionHistory")
+            const translog = document.createElement("p")
+            translog.innerHTML = ` Du har köpt ${numberOfCoffees.value} styck ${coffees[coffeeSorts.value].name} för ${coffees[coffeeSorts.value].price * numberOfCoffees.value}`
+            transactionHistory.appendChild(translog)
+
+            
+        }
+        
+    </script>
+</body>
+
+</html>
