@@ -49,8 +49,6 @@
         class Costumer {
             constructor(){
                 this.transactions = []
-                this.numberOfCups = 0
-                this.sum = 0
                 this.newArray = []
             }
             // adds the transaction the costumer has into a array with a object. 
@@ -67,11 +65,11 @@
             }
             // checks how many cups the costumer has bought and uses this.sum to check in getMemberShip
             getTotalOfCups(){
-                this.sum = 0
+                this.numberOfCups = 0
                 this.transactions.forEach(transaction =>{
-                    this.sum += parseInt(transaction.amount)
+                    this.numberOfCups += parseInt(transaction.amount)
                 })
-                return this.sum
+                return this.numberOfCups
             }
             // checks how much the costumer has spent so far. 
             getTotalSpent(){
@@ -83,13 +81,13 @@
             }
             // checks membership of how many cups the costumer has bought. 
             getMemberShip(){
-                if(this.sum < 10){
+                if(this.numberOfCups < 10){
                     return `Brons`
                 }
-                if(this.sum >= 10 && this.sum < 20){
+                if(this.numberOfCups >= 10 && this.numberOfCups < 30){
                     return `Silver`
                 }
-                if(this.sum >= 20){
+                if(this.numberOfCups >= 30){
                     return `Guld`
                 }
                  
